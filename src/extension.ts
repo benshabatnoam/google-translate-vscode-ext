@@ -10,11 +10,13 @@ export function activate(context: vscode.ExtensionContext) {
 	let disposable = vscode.commands.registerCommand('extension.translate', () => {
 		let editor = vscode.window.activeTextEditor;
 		if (!editor){
-			vscode.window.showErrorMessage('Must select test to translate');
+			vscode.window.showErrorMessage('Must select text to translate');
 			return;
 		}
 		let selection = editor.selection;
 		let selectedText = editor.document.getText(new vscode.Range(selection.start, selection.end));
+		if (!selectedText)		
+			vscode.window.showErrorMessage('Must select text to translate');
 		vscode.window.showInformationMessage(selectedText);
 	});
 
