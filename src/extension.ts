@@ -3,8 +3,6 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 
-var googleTranslate = require('google-translate')('AIzaSyBJKuSQ6xyOq4Bjda3rsdf0n--7LU2O4I4');
-
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
@@ -20,9 +18,15 @@ export function activate(context: vscode.ExtensionContext) {
 			vscode.window.showErrorMessage('Must select text to translate');
 			return;
 		}
-		googleTranslate.translate(selectedText, 'he', (err: any, translation: any) => {
-			if (err)
-				vscode.window.showErrorMessage(err.body);
+		let apiKey: string = vscode.workspace.getConfiguration('googleTranslateExt')['apiKey'];
+		let	googleTranslate = require('google-translate')(apiKey);
+		let language = vscode.workspace.getConfiguration('googleTranslateExt')['language'];
+		googleTranslate.translate(selectedText, language, (err: any, translation: any) => {
+			if (err){
+				var error = JSON.parse(err.body);
+				vscode.window.showErrorMessage(error.error.message);
+
+			}
 			else if (translation)
 				vscode.window.showInformationMessage(translation.translatedText);
 		});
