@@ -1,7 +1,7 @@
 {
-	"name": "google-translate",
-	"displayName": "Google Translate",
-	"description": "Use this extension to translate your code to Hebrew.",
+	"name": "google-translate-ext",
+	"displayName": "Google Translate Extension",
+	"description": "Use this extension to translate your code.",
 	"version": "1.0.0",
 	"publisher": "benshabatnoam",
 	"repository": {
@@ -50,7 +50,6 @@
 			}
 		]
 	},
-	"icon": "src/assets/icons/icon.ico",
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
 		"compile": "tsc -p ./",
