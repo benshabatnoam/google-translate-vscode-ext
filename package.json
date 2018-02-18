@@ -1,0 +1,71 @@
+{
+	"name": "google-translate-ext",
+	"displayName": "Google Translate",
+	"description": "Translate your code using Google Translate API.",
+	"version": "1.0.2",
+	"publisher": "benshabatnoam",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/benshabatnoam/google-translate-vscode-ext.git"
+	},
+	"icon": "assets/icons/icon.ico",
+	"engines": {
+		"vscode": "^0.10.5"
+	},
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [
+		"onCommand:extension.translate"
+	],
+	"main": "./out/extension",
+	"contributes": {
+		"configuration": [
+			{
+				"type": "object",
+				"title": "Google Translate configuration",
+				"properties": {
+					"googleTranslateExt.apiKey": {
+						"type": "string",
+						"default": "",
+						"description": "Type your google API key in order to make google translate extension to work."
+					},
+					"googleTranslateExt.language": {
+						"type": "string",
+						"default": "he",
+						"description": "The language to translate the selected text to."
+					}
+				}
+			}
+		],
+		"commands": [
+			{
+				"command": "extension.translate",
+				"title": "Translate"
+			}
+		],
+		"keybindings": [
+			{
+				"command": "extension.translate",
+				"key": "shift+ctrl+t"
+			}
+		]
+	},
+	"scripts": {
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+		"watch": "tsc -watch -p ./",
+		"postinstall": "node ./node_modules/vscode/bin/install",
+		"test": "npm run compile && node ./node_modules/vscode/bin/test"
+	},
+	"devDependencies": {
+		"typescript": "^2.6.1",
+		"vscode": "^1.1.6",
+		"tslint": "^5.8.0",
+		"@types/node": "^7.0.43",
+		"@types/mocha": "^2.2.42"
+	},
+	"dependencies": {
+		"google-translate": "^2.0.5"
+	}
+}
