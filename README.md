@@ -12,11 +12,6 @@ Select the text that your want to translate and execute command `Translate`
 ## Features
 You can change the language you would like to translate your code to by changing the default value `'he'` in user settings - `googleTranslateExt.language`.
 
-## Release Notes
-### 1.0.0
-
-Initial release of `Google Translate extension`.
-
 -----------------------------------------------------------------------------------------------------------
 
 **Enjoy!**
