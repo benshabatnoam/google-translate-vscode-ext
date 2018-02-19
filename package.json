@@ -8,6 +8,9 @@
 		"type": "git",
 		"url": "https://github.com/benshabatnoam/google-translate-vscode-ext.git"
 	},
+	"bugs": {
+		"url": "https://github.com/benshabatnoam/google-translate-vscode-ext/issues"
+	},
 	"icon": "assets/icons/icon.ico",
 	"engines": {
 		"vscode": "^0.10.5"
