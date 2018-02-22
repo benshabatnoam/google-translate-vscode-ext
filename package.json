@@ -33,10 +33,15 @@
 						"default": "",
 						"description": "Type your google API key in order to make google translate extension to work."
 					},
-					"googleTranslateExt.language": {
-						"type": "string",
-						"default": "he",
-						"description": "The language to translate the selected text to."
+					"googleTranslateExt.languages": {
+						"type": "array",
+						"items": {
+							"type": "string"
+						},
+						"default": [
+							"iw"
+						],
+						"description": "An array of the languages that your would like to translate the selected text to."
 					}
 				}
 			}

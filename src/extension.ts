@@ -20,17 +20,41 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 		let apiKey = vscode.workspace.getConfiguration('googleTranslateExt')['apiKey'];
 		let googleTranslate = require('google-translate')(apiKey);
-		let language = vscode.workspace.getConfiguration('googleTranslateExt')['language'];
-		googleTranslate.translate(selectedText, language, (err: any, translation: any) => {
-			if (err) {
-				var error = JSON.parse(err.body);
-				vscode.window.showErrorMessage(error.error.message);
-			}
-			else if (translation)
-				vscode.window.showInformationMessage(translation.translatedText);
-		});
+		let languages: any = vscode.workspace.getConfiguration('googleTranslateExt')['languages'];
+		if (!languages) {
+			vscode.window.showErrorMessage('Go to user settings and edit "googleTranslateExt.languages".');
+			return;
+		}
+		if (typeof languages === "string") {
+			googleTranslate.translate(selectedText, languages, onTranslated.bind(languages));
+		} else {
+			languages.forEach((language: string) => {
+				googleTranslate.translate(selectedText, language, onTranslated.bind(language));
+			});
+		}
 	});
 	context.subscriptions.push(disposable);
+}
+
+function onTranslated(this: typeof String, err: any, translation: any): void {
+	if (err) {
+		var error = JSON.parse(err.body);
+		if (error.error.code === 400)
+			vscode.window.showErrorMessage('Invalid language code - "' + this + '". Go to user settings and edit "googleTranslateExt.languages".');
+		else
+			vscode.window.showErrorMessage(error.error.message);
+	}
+	else if (diffLanguages(translation.detectedSourceLanguage, this.toString())) {
+		vscode.window.showInformationMessage(translation.translatedText);
+	}
+}
+
+function diffLanguages(detectedSourceLanguage: string, translateToLanguage: string): boolean {
+	if (translateToLanguage === "iw")
+		translateToLanguage = "he";
+	if (detectedSourceLanguage === "iw")
+		detectedSourceLanguage = "he";
+	return detectedSourceLanguage !== translateToLanguage;
 }
 
 // this method is called when your extension is deactivated
