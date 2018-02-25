@@ -1,8 +1,7 @@
 language: node_js
-
-install:
+node_js:
+  - "4"
+before_script:
   - npm install
-  - npm run vscode:prepublish
-
 script:
-  - npm test
+  - npm compile
