@@ -6,12 +6,12 @@
 </h1>
 <h2 align="center">Translate your code using <a href="https://cloud.google.com/translate/">Google Translate Cloud API.</a>
 </h2>
-<section align="center"><a href="https://travis-ci.org/benshabatnoam/google-translate-vscode-ext"><img src="https://travis-ci.org/benshabatnoam/google-translate-vscode-ext.svg?branch=master" alt="Travis CI"></a>
-</section>
-<section>
+<p align="center"><a href="https://travis-ci.org/benshabatnoam/google-translate-vscode-ext"><img src="https://travis-ci.org/benshabatnoam/google-translate-vscode-ext.svg?branch=master" alt="Travis CI"></a>
+</p>
+<p>
 <strong>Important:</strong> In order to use this 
 extension you'll need to provide a <em>Google Translate Cloud API Key</em> of your own. <b style="color:rgb(226, 58, 58)">Without the apiKey this extension is useless for you.</b>
-</section>
+</p>
 
 ## Installation
 1. Install the extension.
