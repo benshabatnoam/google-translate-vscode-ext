@@ -1,6 +1,6 @@
 <h1 align="center">
   <br>
-  <img src="assets/icons/icon.ico">
+  <img src="https://raw.githubusercontent.com/benshabatnoam/google-translate-vscode-ext/master/assets/icons/icon.ico">
   <br>
   Google Translate
 </h1>
