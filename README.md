@@ -6,7 +6,9 @@
 </h1>
 <h2 align="center">Translate your code using <a href="https://cloud.google.com/translate/">Google Translate Cloud API.</a>
 </h2>
-<p align="center"><a href="https://travis-ci.org/benshabatnoam/google-translate-vscode-ext"><img src="https://travis-ci.org/benshabatnoam/google-translate-vscode-ext.svg?branch=master" alt="Travis CI"></a>
+<p align="center">
+  <a href="https://travis-ci.org/benshabatnoam/google-translate-vscode-ext"><img src="https://travis-ci.org/benshabatnoam/google-translate-vscode-ext.svg?branch=master" alt="Travis CI"></a>
+  <a href="https://github.com/benshabatnoam/google-translate-vscode-ext/releases"><img src="https://img.shields.io/github/release/benshabatnoam/google-translate-vscode-ext.svg" alt="version"></a>
 </p>
 <p>
 <strong>Important:</strong> In order to use this 
