@@ -15,6 +15,15 @@
                 "kind": "build",
                 "isDefault": true
             }
+        },
+        {
+            "label": "publish extension",
+            "type": "shell",
+            "command": "vsce",
+            "args": [
+                "publish"
+            ],
+            "problemMatcher": []
         }
     ]
 }
