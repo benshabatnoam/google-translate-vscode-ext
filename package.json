@@ -33,6 +33,11 @@
 						"default": "",
 						"description": "Type your google API key in order to make google translate extension to work."
 					},
+					"googleTranslateExt.replaceText": {
+						"type": "boolean",
+						"default": false,
+						"description": "Set to true in order to replace selected text with the translated text."
+					},
 					"googleTranslateExt.languages": {
 						"type": "array",
 						"items": {

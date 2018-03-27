@@ -3,6 +3,9 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 
+var selectionStart: vscode.Position;
+var selectionEnd: vscode.Position;
+
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
@@ -12,8 +15,9 @@ export function activate(context: vscode.ExtensionContext) {
 			vscode.window.showErrorMessage('Must select text to translate');
 			return;
 		}
-		let selection = editor.selection;
-		let selectedText = editor.document.getText(new vscode.Range(selection.start, selection.end));
+		selectionStart = editor.selection.start;
+		selectionEnd = editor.selection.end;
+		let selectedText = editor.document.getText(new vscode.Range(selectionStart, selectionEnd));
 		if (!selectedText) {
 			vscode.window.showErrorMessage('Must select text to translate');
 			return;
@@ -27,10 +31,17 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 		if (typeof languages === "string") {
 			googleTranslate.translate(selectedText, languages, onTranslated.bind(languages));
-		} else {
-			languages.forEach((language: string) => {
-				googleTranslate.translate(selectedText, language, onTranslated.bind(language));
-			});
+		}
+		else {
+			let replaceText = vscode.workspace.getConfiguration('googleTranslateExt')['replaceText'];
+			if (replaceText) {
+				googleTranslate.translate(selectedText, languages[0], onTranslated.bind(languages[0]));				
+			}
+			else {
+				languages.forEach((language: string) => {
+					googleTranslate.translate(selectedText, language, onTranslated.bind(language));
+				});
+			}
 		}
 	});
 	context.subscriptions.push(disposable);
@@ -45,8 +56,19 @@ function onTranslated(this: typeof String, err: any, translation: any): void {
 			vscode.window.showErrorMessage(error.error.message);
 	}
 	else if (diffLanguages(translation.detectedSourceLanguage, this.toString())) {
-		vscode.window.showInformationMessage(translation.translatedText);
+		let replaceText = vscode.workspace.getConfiguration('googleTranslateExt')['replaceText'];
+		if (replaceText) {
+			let editor = vscode.window.activeTextEditor;
+			editor.edit(replaceSelectedText.bind(translation.translatedText))
+		}
+		else {
+			vscode.window.showInformationMessage(translation.translatedText);
+		}
 	}
+}
+
+function replaceSelectedText(this: typeof String, editBuilder: vscode.TextEditorEdit) {
+	editBuilder.replace(new vscode.Range(selectionStart, selectionEnd), this.toString());
 }
 
 function diffLanguages(detectedSourceLanguage: string, translateToLanguage: string): boolean {
