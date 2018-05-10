@@ -15,9 +15,18 @@ export function activate(context: vscode.ExtensionContext) {
 		replaceText = vscode.workspace.getConfiguration('googleTranslateExt')['replaceText'];
 		selections = vscode.window.activeTextEditor.selections;
 		if (selections.length > 1) {
+			if (selections.every(s => s.isEmpty)) {
+				showEmptyError();
+				return;
+			}
 			multiCursorTranslate();
 		}
 		else if (selections.length === 1) {
+			let selection: vscode.Selection = selections[0];
+			if (selection.isEmpty) {
+				showEmptyError();
+				return;
+			}
 			translate(selections[0]);
 		}
 		else {
@@ -33,12 +42,22 @@ function multiCursorTranslate() {
 	});
 }
 
-function translate(selection: vscode.Selection) {
-	let selectedText = vscode.window.activeTextEditor.document.getText(new vscode.Range(selection.start, selection.end));
-	if (!selectedText || selectedText.length === 0 || !selectedText.trim()) {
-		vscode.window.showErrorMessage('Must select text to translate');
+function translate(selection: vscode.Selection | vscode.Range) {
+	if (!selection.isSingleLine) {
+		let firstLine: number = selection.start.line;
+		let lastLine: number = selection.end.line;
+		for (let line = firstLine; line <= lastLine; line++) {
+			let range: vscode.Range = vscode.window.activeTextEditor.document.lineAt(line).range;
+			if (line === firstLine) {
+				range = new vscode.Range(line, selection.start.character, line, range.end.character);
+			} else if (line === lastLine) {
+				range = new vscode.Range(line, 0, line, selection.end.character);
+			}
+			translate(range);
+		}
 		return;
 	}
+	let selectedText: string = vscode.window.activeTextEditor.document.getText(new vscode.Range(selection.start, selection.end));
 	let apiKey = vscode.workspace.getConfiguration('googleTranslateExt')['apiKey'];
 	let googleTranslate = require('google-translate')(apiKey);
 	let languages: any = vscode.workspace.getConfiguration('googleTranslateExt')['languages'];
@@ -97,6 +116,10 @@ function onTranslated(selection: vscode.Selection, language: string, err: any, t
 			vscode.window.showInformationMessage(translation.translatedText);
 		}
 	}
+}
+
+function showEmptyError(): void {
+	vscode.window.showErrorMessage('Must select text to translate');
 }
 
 // this method is called when your extension is deactivated
