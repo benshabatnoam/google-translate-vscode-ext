@@ -1,3 +1,7 @@
+## 1.3.0
+- Multi cursor translation
+- Multi line translation
+
 ## 1.2.0
 - Replace selected text with translation
 

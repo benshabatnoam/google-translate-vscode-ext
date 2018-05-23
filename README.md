@@ -26,8 +26,10 @@ Select the text that your want to translate and execute `Translate` command.
 > Tip: Use the shortcut `Ctrl+Shift+t` to translate the selected text.
 
 ## Features
-* <u>Multi languages:</u><br>Translate your code to multi languages simply by adding the desired language code to `googleTranslateExt.languages` string array configuration.
+* <u>Multi Languages:</u><br>Translate your code to multi languages simply by adding the desired language code to `googleTranslateExt.languages` string array configuration.
 * <u>Replace Text</u>:<br>Replace selected text with translated text by configuring `googleTranslateExt.replaceText` to 'true'.
+* <u>Multi Cursor</u>:<br>Translate/Replace selected text in each selected cursor's text.
+* <u>Multiline</u>:<br>When selected text is multiline, each line will be translate separately.
 
 ## Language code table
 <table>
