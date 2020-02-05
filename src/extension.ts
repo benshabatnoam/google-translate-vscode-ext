@@ -1,6 +1,7 @@
 'use strict';
 
 import * as vscode from 'vscode';
+const translate = require("google-translate-open-api").default;
 
 var googleTranslate: any;
 var languages: any;
@@ -33,7 +34,7 @@ function onActivate(): void {
 			showEmptyError();
 			return;
 		}
-		translateSelection(selections[0]);
+		translateSelectionFreeApi(selections[0]);
 	}
 	else {
 		showEmptyError();
@@ -52,11 +53,11 @@ function initMembers(): void {
 
 function multiCursorTranslate(): void {
 	selections.forEach(selection => {
-		translateSelection(selection);
+		translateSelectionFreeApi(selection);
 	});
 }
 
-function translateSelection(selection: vscode.Selection | vscode.Range): void {
+function translateSelectionPaidApi(selection: vscode.Selection | vscode.Range): void {
 	if (!selection.isSingleLine) {
 		let firstLineNumber: number = selection.start.line;
 		let lastLineNumber = selection.end.line;
@@ -68,7 +69,7 @@ function translateSelection(selection: vscode.Selection | vscode.Range): void {
 			} else if (lineNumber === lastLineNumber) {
 				range = new vscode.Range(lineNumber, 0, lineNumber, selection.end.character);
 			}
-			translateSelection(range);
+			translateSelectionFreeApi(range);
 		}
 		return;
 	}
@@ -78,29 +79,76 @@ function translateSelection(selection: vscode.Selection | vscode.Range): void {
 		return;
 	}
 	if (typeof languages === "string") {
-		googleTranslate.translate(selectedText, languages, onGoogleTranslate);
+		googleTranslate.translate(selectedText, languages, onGoogleTranslateFreeApi);
 	}
 	else {
 		if (replaceText) {
-			googleTranslate.translate(selectedText, languages[0], onGoogleTranslate.bind(null, selection, languages[0]));
+			googleTranslate.translate(selectedText, languages[0], onGoogleTranslateFreeApi);
 		}
 		else {
 			languages.forEach((language: string) => {
-				googleTranslate.translate(selectedText, language, onGoogleTranslate.bind(null, selection, language));
+				googleTranslate.translate(selectedText, language, onGoogleTranslateFreeApi);
 			});
 		}
 	}
 }
 
-function onGoogleTranslate(selection: vscode.Selection, language: string, err: any, translation: any): void {
+function translateSelectionFreeApi(selection: vscode.Selection | vscode.Range): void {
+	if (!selection.isSingleLine) {
+		let firstLineNumber: number = selection.start.line;
+		let lastLineNumber = selection.end.line;
+		linesCount += lastLineNumber - firstLineNumber;
+		for (let lineNumber = firstLineNumber; lineNumber <= lastLineNumber; lineNumber++) {
+			let range: vscode.Range = vscode.window.activeTextEditor.document.lineAt(lineNumber).range;
+			if (lineNumber === firstLineNumber) {
+				range = new vscode.Range(lineNumber, selection.start.character, lineNumber, range.end.character);
+			} else if (lineNumber === lastLineNumber) {
+				range = new vscode.Range(lineNumber, 0, lineNumber, selection.end.character);
+			}
+			translateSelectionFreeApi(range);
+		}
+		return;
+	}
+	let selectedText: string = vscode.window.activeTextEditor.document.getText(new vscode.Range(selection.start, selection.end));
+	if (!languages) {
+		vscode.window.showErrorMessage('Go to user settings and edit "googleTranslateExt.languages".');
+		return;
+	}
+	if (typeof languages === "string") {
+		translate(selectedText, onGoogleTranslateFreeApi);
+	}
+	else {
+		if (replaceText) {
+			translate(selectedText, onGoogleTranslateFreeApi);
+		}
+		else {
+			languages.forEach((language: string) => {
+				// translate(selectedText, onGoogleTranslate.bind(null, selection, language));
+			});
+		}
+	}
+}
+
+function onGoogleTranslateFreeApi(res: any) {
+	if (!!res && !!res.data) {
+			vscode.window.showInformationMessage(res.data[0]);
+	} else {
+		throw new Error("Google Translation API issue");
+	}
+}
+
+function onGoogleTranslatePaidApi(selection: vscode.Selection, language: string, err: any, translation: any): void {
 	if (err) {
 		var error: any;
-		if (err.body)
-			error += JSON.parse(err.body)
-		if (err.error)
+		if (err.body) {
+			error += JSON.parse(err.body);
+		}
+		if (err.error) {
 			error += err.error.message;
-		if (error)
+		}
+		if (error) {
 			console.error(error);
+		}
 		vscode.window.showErrorMessage('error ocurred on translation, see console for more details');
 	}
 	else if (translation.detectedSourceLanguage !== language) {
