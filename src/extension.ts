@@ -3,7 +3,6 @@
 import * as vscode from 'vscode';
 const translateApi: (selectedText: string, configuration: {}) => Promise<any> = require("google-translate-open-api").default;
 
-var googleTranslate: any;
 var languages: any;
 var replaceText: boolean;
 var translations: any[];
@@ -42,8 +41,6 @@ function onActivate(): void {
 }
 
 function initMembers(): void {
-	let apiKey = vscode.workspace.getConfiguration('googleTranslateExt')['apiKey'];
-	googleTranslate = require('google-translate')(apiKey);
 	languages = vscode.workspace.getConfiguration('googleTranslateExt')['languages'];
 	replaceText = vscode.workspace.getConfiguration('googleTranslateExt')['replaceText'];
 	selections = vscode.window.activeTextEditor.selections;
