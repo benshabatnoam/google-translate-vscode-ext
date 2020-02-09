@@ -17,4 +17,4 @@ jobs:
     - name: install vsce globaly
       run: npm install -g vsce
     - name: publish extension
-      run: vsce
+      run: vsce publish
