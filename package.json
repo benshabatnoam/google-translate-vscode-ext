@@ -28,11 +28,6 @@
 				"type": "object",
 				"title": "Google Translate configuration",
 				"properties": {
-					"googleTranslateExt.apiKey": {
-						"type": "string",
-						"default": "",
-						"description": "Type your google API key in order to make google translate extension to work."
-					},
 					"googleTranslateExt.replaceText": {
 						"type": "boolean",
 						"default": false,
@@ -44,7 +39,7 @@
 							"type": "string"
 						},
 						"default": [
-							"iw"
+							"en"
 						],
 						"description": "An array of the languages that your would like to translate the selected text to."
 					}
@@ -79,6 +74,7 @@
 		"vscode": "^1.1.29"
 	},
 	"dependencies": {
-		"google-translate": "^2.2.0"
+		"google-translate": "^2.2.0",
+		"google-translate-open-api": "^1.3.2"
 	}
 }
