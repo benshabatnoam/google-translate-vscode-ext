@@ -2,7 +2,7 @@
 	"name": "google-translate-ext",
 	"displayName": "Google Translate",
 	"description": "Translate your code using Google Translate API.",
-	"version": "1.3.1",
+	"version": "2.0.0",
 	"publisher": "benshabatnoam",
 	"repository": {
 		"type": "git",
@@ -74,7 +74,6 @@
 		"vscode": "^1.1.29"
 	},
 	"dependencies": {
-		"google-translate": "^2.2.0",
 		"google-translate-open-api": "^1.3.2"
 	}
 }
