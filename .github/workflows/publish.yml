@@ -19,4 +19,6 @@ jobs:
     - name: packag extension
       run: vsce package
     - name: publish extension
-      run: vsce publish
+      run: vsce publish -p 
+      env:
+        NODE_AUTH_TOKEN: ${{secrets.VSCE_TOKEN}}
