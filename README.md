@@ -4,22 +4,16 @@
   <br>
   Google Translate
 </h1>
-<h2 align="center">Translate your code using <a href="https://cloud.google.com/translate/">Google Translate Cloud API.</a>
+<h2 align="center">Translate your code using Google Translate.</a>
 </h2>
 <p align="center">
   <a href="https://travis-ci.org/benshabatnoam/google-translate-vscode-ext"><img src="https://travis-ci.org/benshabatnoam/google-translate-vscode-ext.svg?branch=master" alt="Travis CI"></a>
   <a href="https://github.com/benshabatnoam/google-translate-vscode-ext/releases"><img src="https://img.shields.io/github/release/benshabatnoam/google-translate-vscode-ext.svg" alt="version"></a>
 </p>
-<p>
-<strong>Important:</strong> In order to use this 
-extension you'll need to provide a <em>Google Translate Cloud API Key</em> of your own. <b style="color:rgb(226, 58, 58)">Without the apiKey this extension is useless for you.</b>
-</p>
 
 ## Installation
 1. Install the extension.
-2. Create *Google Cloud Translate API Key*. You can use [*Atril Solutions* step by step Guide](https://atrilsolutions.zendesk.com/hc/en-us/articles/205540421-How-to-obtain-a-Google-Translate-API-key).
-3. Add your google API key in user settings configuration - `googleTranslateExt.apiKey`.
-4. Configure desired *'translate to'* language/s in user settings configuration - `googleTranslateExt.languages` (see language code table below).
+2. Configure desired *'translate to'* language/s in user settings configuration - `googleTranslateExt.languages` (see language code table below).
 
 ## How to use
 Select the text that your want to translate and execute `Translate` command.
