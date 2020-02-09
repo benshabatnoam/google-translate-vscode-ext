@@ -1,8 +1,8 @@
 'use strict';
 
 import * as vscode from 'vscode';
+const translateApi: (selectedText: string, configuration: {}) => Promise<any> = require("google-translate-open-api").default;
 
-var googleTranslate: any;
 var languages: any;
 var replaceText: boolean;
 var translations: any[];
@@ -41,8 +41,6 @@ function onActivate(): void {
 }
 
 function initMembers(): void {
-	let apiKey = vscode.workspace.getConfiguration('googleTranslateExt')['apiKey'];
-	googleTranslate = require('google-translate')(apiKey);
 	languages = vscode.workspace.getConfiguration('googleTranslateExt')['languages'];
 	replaceText = vscode.workspace.getConfiguration('googleTranslateExt')['replaceText'];
 	selections = vscode.window.activeTextEditor.selections;
@@ -78,53 +76,47 @@ function translateSelection(selection: vscode.Selection | vscode.Range): void {
 		return;
 	}
 	if (typeof languages === "string") {
-		googleTranslate.translate(selectedText, languages, onGoogleTranslate);
-	}
-	else {
+		translate(selectedText, <vscode.Selection>selection, languages);
+	} else {
 		if (replaceText) {
-			googleTranslate.translate(selectedText, languages[0], onGoogleTranslate.bind(null, selection, languages[0]));
-		}
-		else {
+			translate(selectedText, <vscode.Selection>selection, languages[0]);
+		} else {
 			languages.forEach((language: string) => {
-				googleTranslate.translate(selectedText, language, onGoogleTranslate.bind(null, selection, language));
+				translate(selectedText, <vscode.Selection>selection, language);
 			});
 		}
 	}
 }
 
-function onGoogleTranslate(selection: vscode.Selection, language: string, err: any, translation: any): void {
-	if (err) {
-		var error: any;
-		if (err.body)
-			error += JSON.parse(err.body)
-		if (err.error)
-			error += err.error.message;
-		if (error)
-			console.error(error);
-		vscode.window.showErrorMessage('error ocurred on translation, see console for more details');
-	}
-	else if (translation.detectedSourceLanguage !== language) {
-		if (replaceText) {
-			if (selections.length + linesCount === translations.length + 1) {
-				let editor = vscode.window.activeTextEditor;
-				editor.edit((editBuilder: vscode.TextEditorEdit) => {
-					for (let i = 0; i < translations.length; i++) {
-						const element = translations[i];
-						editBuilder.replace(element.selection, element.translation.translatedText);
-					}
-					editBuilder.replace(selection, translation.translatedText);
-				});
-			}
-			else {
-				translations.push({
-					'selection': selection,
-					'translation': translation
-				});
-			}
+function translate(textToTranslate: string, selection: vscode.Selection, language: string): void {
+	translateApi(textToTranslate, { to: language })
+		.then((res: any) => {
+			onTranslateSuccess(selection, language, res.data[0]);
+		})
+		.catch((error: Error) => {
+			vscode.window.showInformationMessage(error.message);
+		});
+}
+
+function onTranslateSuccess(selection: vscode.Selection, language: string, translatedText: any): void {
+	if (replaceText) {
+		if (selections.length + linesCount === translations.length + 1) {
+			let editor = vscode.window.activeTextEditor;
+			editor.edit((editBuilder: vscode.TextEditorEdit) => {
+				for (let i = 0; i < translations.length; i++) {
+					const element = translations[i];
+					editBuilder.replace(element.selection, element.translatedText);
+				}
+				editBuilder.replace(selection, translatedText);
+			});
+		} else {
+			translations.push({
+				'selection': selection,
+				'translation': translatedText
+			});
 		}
-		else {
-			vscode.window.showInformationMessage(translation.translatedText);
-		}
+	} else {
+		vscode.window.showInformationMessage(translatedText);
 	}
 }
 
