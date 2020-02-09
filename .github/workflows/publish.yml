@@ -1,0 +1,20 @@
+name: Publish Extension
+on:
+  push:
+   branches:
+    - master
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js 11.x
+      uses: actions/setup-node@v1
+      with:
+        node-version: '11.x'
+    - name: npm install
+      run: npm install
+    - name: install vsce globaly
+      run: npm install -g vsce
+    - name: publish extension
+      run: vsce
