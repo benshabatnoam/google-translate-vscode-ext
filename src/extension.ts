@@ -2,12 +2,12 @@
 
 import * as vscode from 'vscode';
 const translateApi: (selectedText: string, configuration: {}) => Promise<any> = require("google-translate-open-api").default;
-
 var languages: any;
 var replaceText: boolean;
 var translations: any[];
 var selections: vscode.Selection[];
 var linesCount: number;
+let activeEditor: vscode.TextEditor;
 
 export function activate(context: vscode.ExtensionContext) {
 	let disposable = vscode.commands.registerCommand('extension.translate', onActivate);
@@ -19,6 +19,7 @@ function onActivate(): void {
 		vscode.window.showErrorMessage('Must select text to translate');
 		return;
 	}
+	activeEditor = vscode.window.activeTextEditor;
 	initMembers();
 	if (selections.length > 1) {
 		if (selections.every(s => s.isEmpty)) {
@@ -43,7 +44,7 @@ function onActivate(): void {
 function initMembers(): void {
 	languages = vscode.workspace.getConfiguration('googleTranslateExt')['languages'];
 	replaceText = vscode.workspace.getConfiguration('googleTranslateExt')['replaceText'];
-	selections = vscode.window.activeTextEditor.selections;
+	selections = activeEditor.selections;
 	translations = [];
 	linesCount = 0;
 }
@@ -60,7 +61,7 @@ function translateSelection(selection: vscode.Selection | vscode.Range): void {
 		let lastLineNumber = selection.end.line;
 		linesCount += lastLineNumber - firstLineNumber;
 		for (let lineNumber = firstLineNumber; lineNumber <= lastLineNumber; lineNumber++) {
-			let range: vscode.Range = vscode.window.activeTextEditor.document.lineAt(lineNumber).range;
+			let range: vscode.Range = activeEditor.document.lineAt(lineNumber).range;
 			if (lineNumber === firstLineNumber) {
 				range = new vscode.Range(lineNumber, selection.start.character, lineNumber, range.end.character);
 			} else if (lineNumber === lastLineNumber) {
@@ -70,7 +71,7 @@ function translateSelection(selection: vscode.Selection | vscode.Range): void {
 		}
 		return;
 	}
-	let selectedText: string = vscode.window.activeTextEditor.document.getText(new vscode.Range(selection.start, selection.end));
+	let selectedText: string = activeEditor.document.getText(new vscode.Range(selection.start, selection.end));
 	if (!languages) {
 		vscode.window.showErrorMessage('Go to user settings and edit "googleTranslateExt.languages".');
 		return;
@@ -101,8 +102,7 @@ function translate(textToTranslate: string, selection: vscode.Selection, languag
 function onTranslateSuccess(selection: vscode.Selection, language: string, translatedText: any): void {
 	if (replaceText) {
 		if (selections.length + linesCount === translations.length + 1) {
-			let editor = vscode.window.activeTextEditor;
-			editor.edit((editBuilder: vscode.TextEditorEdit) => {
+			activeEditor.edit((editBuilder: vscode.TextEditorEdit) => {
 				for (let i = 0; i < translations.length; i++) {
 					const element = translations[i];
 					editBuilder.replace(element.selection, element.translatedText);
