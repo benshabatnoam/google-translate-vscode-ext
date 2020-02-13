@@ -10,8 +10,25 @@ var linesCount: number;
 let activeEditor: vscode.TextEditor;
 
 export function activate(context: vscode.ExtensionContext) {
+	showWhatsNew(context);
 	let disposable = vscode.commands.registerCommand('extension.translate', onActivate);
 	context.subscriptions.push(disposable);
+}
+
+function showWhatsNew(context: vscode.ExtensionContext): void {
+	const myScheme = 'whatsNew';
+	const myProvider = new class implements vscode.TextDocumentContentProvider {
+		onDidChangeEmitter = new vscode.EventEmitter<vscode.Uri>();
+		onDidChange = this.onDidChangeEmitter.event;
+		provideTextDocumentContent(uri: vscode.Uri): string {
+			return 'moooo';
+		}
+	};
+	context.subscriptions.push(vscode.workspace.registerTextDocumentContentProvider(myScheme, myProvider));
+	let uri = vscode.Uri.parse('whatsNew:Whats New');
+	let doc = vscode.workspace.openTextDocument(uri).then(doc => {
+		vscode.window.showTextDocument(doc, { preview: false });
+	});
 }
 
 function onActivate(): void {
