@@ -24,6 +24,25 @@
                 "publish"
             ],
             "problemMatcher": []
+        },
+        {
+            "label": "install extension",
+            "type": "shell",
+            "command": "code --install-extension ${input:ext-vsix-file-path}"
+        },
+        ,
+        {
+            "label": "un-install extension",
+            "type": "shell",
+            "command": "code --uninstall-extension ${input:ext-vsix-file-path}"
+        }
+    ],
+    "inputs": [
+        {
+            "id": "ext-vsix-file-path",
+            "type": "promptString",
+            "description": "extension .vsix file path",
+            "default": "./google-translate-ext-2.1.0.vsix"
         }
     ]
 }
