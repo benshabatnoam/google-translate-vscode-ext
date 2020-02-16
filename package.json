@@ -19,7 +19,7 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:extension.translate"
+		"*"
 	],
 	"main": "./out/extension.js",
 	"contributes": {

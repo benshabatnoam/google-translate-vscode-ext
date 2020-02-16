@@ -10,25 +10,49 @@ var linesCount: number;
 let activeEditor: vscode.TextEditor;
 
 export function activate(context: vscode.ExtensionContext) {
-	showWhatsNew(context);
+	showWhatsNew();
 	let disposable = vscode.commands.registerCommand('extension.translate', onActivate);
 	context.subscriptions.push(disposable);
 }
 
-function showWhatsNew(context: vscode.ExtensionContext): void {
-	const myScheme = 'whatsNew';
-	const myProvider = new class implements vscode.TextDocumentContentProvider {
-		onDidChangeEmitter = new vscode.EventEmitter<vscode.Uri>();
-		onDidChange = this.onDidChangeEmitter.event;
-		provideTextDocumentContent(uri: vscode.Uri): string {
-			return 'moooo';
-		}
-	};
-	context.subscriptions.push(vscode.workspace.registerTextDocumentContentProvider(myScheme, myProvider));
-	let uri = vscode.Uri.parse('whatsNew:Whats New');
-	let doc = vscode.workspace.openTextDocument(uri).then(doc => {
-		vscode.window.showTextDocument(doc, { preview: false });
-	});
+function showWhatsNew(): void {
+	const panel = vscode.window.createWebviewPanel(
+		'whatsNew',
+		`What's New in Google Translate`,
+		vscode.ViewColumn.One,
+		{}
+	);
+	panel.webview.html = getWebviewContent();
+}
+
+function getWebviewContent() {
+	return `
+		<!DOCTYPE html>
+		<html lang="en">
+			<head>
+					<meta charset="UTF-8">
+					<meta name="viewport" content="width=device-width, initial-scale=1.0">
+					<title>What's New in Google Translate</title>
+			</head>
+			<body>
+				<h1 align="center">
+					<br>
+					<img src="https://raw.githubusercontent.com/benshabatnoam/google-translate-vscode-ext/master/assets/icons/icon.ico">
+					<br>
+					Google Translate
+				</h1>
+				<h2 align="center">Translate your code using Google Translate.</a>
+				</h2>
+				<p align="center">
+					<a href="https://travis-ci.org/benshabatnoam/google-translate-vscode-ext"><img src="https://travis-ci.org/benshabatnoam/google-translate-vscode-ext.svg?branch=master" alt="Travis CI"></a>
+					<a href="https://github.com/benshabatnoam/google-translate-vscode-ext/releases"><img src="https://img.shields.io/github/release/benshabatnoam/google-translate-vscode-ext.svg" alt="version"></a>
+				</p>
+				<h3 align="center">
+					No need to register <i>Google Cloud Translate API</i> anymore! Translate your code totally free from today.
+				</h3>
+			</body>
+		</html>
+	`;
 }
 
 function onActivate(): void {
