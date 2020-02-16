@@ -2,7 +2,7 @@
 	"name": "google-translate-ext",
 	"displayName": "Google Translate",
 	"description": "Translate your code using Google Translate API.",
-	"version": "2.0.0",
+	"version": "2.1.0",
 	"publisher": "benshabatnoam",
 	"repository": {
 		"type": "git",
