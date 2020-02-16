@@ -10,12 +10,15 @@ var linesCount: number;
 let activeEditor: vscode.TextEditor;
 
 export function activate(context: vscode.ExtensionContext) {
-	showWhatsNew();
+	const isShowWhatsNew = context.globalState.get('show-whats-new') ?? true;
+	if (isShowWhatsNew) {
+		showWhatsNew(context);
+	}
 	let disposable = vscode.commands.registerCommand('extension.translate', onActivate);
 	context.subscriptions.push(disposable);
 }
 
-function showWhatsNew(): void {
+function showWhatsNew(context: vscode.ExtensionContext): void {
 	const panel = vscode.window.createWebviewPanel(
 		'whatsNew',
 		`What's New in Google Translate`,
@@ -23,6 +26,11 @@ function showWhatsNew(): void {
 		{}
 	);
 	panel.webview.html = getWebviewContent();
+	panel.onDidDispose(onWhatsNewClosed.bind(null, context));
+}
+
+function onWhatsNewClosed(context: vscode.ExtensionContext) {
+	context.globalState.update('show-whats-new', false);
 }
 
 function getWebviewContent() {
