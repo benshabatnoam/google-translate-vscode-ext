@@ -6,6 +6,7 @@ on:
    paths-ignore:
     - 'README.md'
     - '.github/workflows/**'
+    - 'package-lock.json'
 jobs:
   build:
     runs-on: ubuntu-latest
