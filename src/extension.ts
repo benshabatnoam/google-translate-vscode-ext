@@ -127,7 +127,7 @@ function translateSelection(selection: vscode.Selection | vscode.Range): void {
 	}
 	if (typeof languages === "string") {
 		translate(selectedText, <vscode.Selection>selection, languages);
-	} else {
+	} else if (replaceText) {
 		const quickPick = vscode.window.createQuickPick();
 		quickPick.items = languages.sort().map((label: string) => ({ label }));
 		quickPick.placeholder = "Select a language...";
@@ -136,8 +136,11 @@ function translateSelection(selection: vscode.Selection | vscode.Range): void {
 			quickPick.dispose();
 		});
 		quickPick.onDidHide(() => quickPick.dispose());
-
 		quickPick.show();
+	} else {
+		languages.forEach((language: string) => {
+			translate(selectedText, <vscode.Selection>selection, language);
+		});
 	}
 }
 
