@@ -2,7 +2,7 @@
 	"name": "google-translate-ext",
 	"displayName": "Google Translate",
 	"description": "Translate your code using Google Translate API.",
-	"version": "2.1.0",
+	"version": "2.2.0",
 	"publisher": "benshabatnoam",
 	"repository": {
 		"type": "git",
@@ -72,7 +72,7 @@
 		"@types/node": "^7.10.9",
 		"@types/vscode": "^1.42.0",
 		"glob": "^7.1.6",
-		"mocha": "^7.0.1",
+		"mocha": "^7.1.2",
 		"tslint": "^5.8.0",
 		"typescript": "^3.7.5",
 		"vscode-test": "^1.3.0"
