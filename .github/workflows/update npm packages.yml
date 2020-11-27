@@ -21,9 +21,9 @@ jobs:
         run: npm install
 
       - name: Create Pull Request
+        id: cpr
         uses: peter-evans/create-pull-request@master
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: Update report
           committer: GitHub <noreply@github.com>
           author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
