@@ -1,0 +1,37 @@
+name: Npm Update
+on:
+  push:
+  schedule:
+    - cron: 0 0 1 * *
+    - cron: 0 0 28 * *
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js 11.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: '11.x'
+
+      - name: Update
+        run: npm update
+
+      - name: Install
+        run: npm install
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: Update report
+          committer: GitHub <noreply@github.com>
+          author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
+          title: 'Pull request Update packages'
+          labels: |
+            report
+            automated pr
+      - name: Check outputs
+        run: |
+          echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
+          echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"
