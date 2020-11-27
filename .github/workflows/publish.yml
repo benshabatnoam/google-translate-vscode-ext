@@ -16,11 +16,28 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: '11.x'
+
+    - name: Edit Version
+      run: |
+        id_run=$(echo "${{ github.run_id }}" |cut -b 2-5)
+        old="$(cat package.json |grep 'version'|head -1)"
+        sed "s|$old|\"version\": \"23.$id_run.0\",|g" package.json > package2.json
+        cat package2.json > package.json
+        rm -rfv package2.json
+
     - name: npm install
       run: npm install
-    - name: install vsce globaly
-      run: npm install -g vsce
+
     - name: packag extension
-      run: vsce package
-    - name: publish extension
-      run: vsce publish -p ${{secrets.VSCE_TOKEN}}
+      run: npx vsce package
+
+    - name: Releases
+      uses: softprops/action-gh-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        name: Run ID ${{ github.run_id }}
+        tag_name: ${{ github.run_id }}
+        body: |
+          push
+        files: '*.vsix'

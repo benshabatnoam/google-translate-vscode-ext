@@ -11,6 +11,14 @@ jobs:
         with:
           ref: 'dev'
 
+      - name: Edit Version
+        run: |
+          id_run=$(echo ${{ github.run_id }} |cut -b 2-5)
+          old="$(cat package.json |grep 'version'|head -1)"
+          sed "s|$old|\"version\": \"23.$id_run.0beta\",|g" package.json > package2.json
+          cat package2.json > package.json
+          rm -rfv package2.json
+
       - name: Use Node.js 11.x
         uses: actions/setup-node@v1
         with:

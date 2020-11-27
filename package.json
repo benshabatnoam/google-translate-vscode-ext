@@ -3,7 +3,7 @@
 	"displayName": "Google Translate",
 	"description": "Translate your code using Google Translate API.",
 	"version": "2.2.0",
-	"publisher": "benshabatnoam",
+	"publisher": "Sirherobrine23",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/benshabatnoam/google-translate-vscode-ext.git"
