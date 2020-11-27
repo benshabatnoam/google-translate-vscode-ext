@@ -28,9 +28,7 @@ jobs:
           committer: GitHub <noreply@github.com>
           author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
           title: 'Pull request Update packages'
-          labels: |
-            report
-            automated pr
+
       - name: Check outputs
         run: |
           echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
