@@ -28,6 +28,7 @@ jobs:
           committer: GitHub <noreply@github.com>
           author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
           title: 'Pull request Update packages'
+          branch: npm_update_${{ github.run_id }}
 
       - name: Check outputs
         run: |
