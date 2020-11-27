@@ -22,13 +22,10 @@ jobs:
 
       - name: Create Pull Request
         id: cpr
-        uses: peter-evans/create-pull-request@master
+        uses: repo-sync/pull-request@v2
         with:
-          commit-message: Update report
-          committer: GitHub <noreply@github.com>
-          author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
-          title: 'Pull request Update packages'
-          branch: npm_update_${{ github.run_id }}
+          destination_branch: "master"
+          github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Check outputs
         run: |
