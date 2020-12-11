@@ -1,7 +1,7 @@
 'use strict';
 
 import * as vscode from 'vscode';
-const translateApi: (selectedText: string, configuration: {}) => Promise<any> = require("google-translate-open-api").default;
+const translateApi: (selectedText: string, configuration: {}) => Promise<any> = require("@vitalets/google-translate-api");
 var languages: any;
 var replaceText: boolean;
 var translations: any[];
@@ -149,9 +149,9 @@ function translateSelection(selection: vscode.Selection | vscode.Range): void {
 }
 
 function translate(textToTranslate: string, selection: vscode.Selection, language: string): void {
-	translateApi(textToTranslate, { to: language })
+	translateApi(textToTranslate, { to: language, client: 'gtx' })
 		.then((res: any) => {
-			onTranslateSuccess(selection, language, res.data[0]);
+			onTranslateSuccess(selection, language, res.text);
 		})
 		.catch((error: Error) => {
 			vscode.window.showInformationMessage(error.message);
