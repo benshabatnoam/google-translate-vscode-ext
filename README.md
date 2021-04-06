@@ -453,6 +453,7 @@ Select the text that your want to translate and execute `Translate` command.
 </tbody>
 </table>
 
+
 This table copied from [Google Cloud Platform - Language Support page](https://cloud.google.com/translate/docs/languages).
 
 -----------------------------------------------------------------------------------------------------------
