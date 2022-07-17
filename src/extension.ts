@@ -71,6 +71,7 @@ function onActivate(): void {
     vscode.window.showErrorMessage('Must select text to translate');
     return;
   }
+
   activeEditor = vscode.window.activeTextEditor;
   initMembers();
   if (selections.length > 1) {
@@ -121,32 +122,46 @@ function translateSelection(selection: vscode.Selection | vscode.Range): void {
     }
     return;
   }
-  let selectedText: string = activeEditor.document.getText(new vscode.Range(selection.start, selection.end));
+
+  let selectedTextResult: string = splitStringByUpperCaseCharacters(activeEditor.document.getText(new vscode.Range(selection.start, selection.end)));
   if (!languages) {
     vscode.window.showErrorMessage('Go to user settings and edit "googleTranslateExt.languages".');
     return;
   }
   if (typeof languages === 'string') {
-    translate(selectedText, <vscode.Selection>selection, languages);
+    translate(selectedTextResult, <vscode.Selection>selection, languages);
   } else if (replaceText) {
     if (languages.length > 1) {
       const quickPick = vscode.window.createQuickPick();
       quickPick.items = languages.sort().map((label: string) => ({ label }));
       quickPick.placeholder = 'Select a language...';
       quickPick.onDidAccept(() => {
-        translate(selectedText, <vscode.Selection>selection, quickPick.selectedItems[0].label);
+        translate(selectedTextResult, <vscode.Selection>selection, quickPick.selectedItems[0].label);
         quickPick.dispose();
       });
       quickPick.onDidHide(() => quickPick.dispose());
       quickPick.show();
     } else {
-      translate(selectedText, <vscode.Selection>selection, languages[0]);
+      translate(selectedTextResult, <vscode.Selection>selection, languages[0]);
     }
   } else {
     languages.forEach((language: string) => {
-      translate(selectedText, <vscode.Selection>selection, language);
+      translate(selectedTextResult, <vscode.Selection>selection, language);
     });
   }
+}
+
+function splitStringByUpperCaseCharacters(selectedText : string): string{
+  let removeSpecialChars = selectedText.replace(/[&\/\\#,+()$~%.'":*?<>{}_-]/g, ' ');
+
+  if (removeSpecialChars === removeSpecialChars.toUpperCase()) {
+    return removeSpecialChars;
+  }
+
+  return removeSpecialChars
+      .split(/(?=[A-ZА-Я]+?(?=[a-z]))/)
+      .join(' ')
+      .replace(/( )(?=[A-Z]*( ))/g, '');
 }
 
 function translate(textToTranslate: string, selection: vscode.Selection, language: string): void {
