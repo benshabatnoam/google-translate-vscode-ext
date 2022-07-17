@@ -122,8 +122,8 @@ function translateSelection(selection: vscode.Selection | vscode.Range): void {
     }
     return;
   }
-  let selectedText: string[] = activeEditor.document.getText(new vscode.Range(selection.start, selection.end)).split(/(?=[A-Z])/);   
-  let selectedTextResult: string = selectedText.join(" ");
+
+  let selectedTextResult: string = splitStringByUpperCaseCharacters(activeEditor.document.getText(new vscode.Range(selection.start, selection.end)));
   if (!languages) {
     vscode.window.showErrorMessage('Go to user settings and edit "googleTranslateExt.languages".');
     return;
@@ -149,6 +149,19 @@ function translateSelection(selection: vscode.Selection | vscode.Range): void {
       translate(selectedTextResult, <vscode.Selection>selection, language);
     });
   }
+}
+
+function splitStringByUpperCaseCharacters(selectedText : string): string{
+  let removeSpecialChars = selectedText.replace(/[&\/\\#,+()$~%.'":*?<>{}_-]/g, ' ');
+
+  if (removeSpecialChars === removeSpecialChars.toUpperCase()) {
+    return removeSpecialChars;
+  }
+
+  return removeSpecialChars
+      .split(/(?=[A-ZА-Я]+?(?=[a-z]))/)
+      .join(' ')
+      .replace(/( )(?=[A-Z]*( ))/g, '');
 }
 
 function translate(textToTranslate: string, selection: vscode.Selection, language: string): void {
